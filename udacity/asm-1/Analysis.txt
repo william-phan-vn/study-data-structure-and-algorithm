@@ -1,0 +1,36 @@
+------------ ANALYSE TIME COMPLEXITY -----------
+
+*** Task 0
+    I retrieve data from list by a known index, so the time complexity is O(1).
+
+*** Task 1
+    There's a loop through N records of texts and calls.
+    Inside the loop, I used the IN operator to check if a value exists in the list.
+    The time complexity of the IN operator for lists is O(n).
+    So the overall time complexity is O(n^2).
+
+*** Task 2
+    For the function update_phone_numbers():
+        It has no loops, and the time complexity
+        of getting value by key in a dict (dict.get(key)) is O(1).
+        So the overall time complexity is O(1).
+
+    I used 2 loops sequentially (lines 33 and 40), so the simplified time complexity is O(n).
+
+    The overall time complexity is O(n).
+
+*** Task 3
+    For the function get_area_code(): I used IN operator to loop over a phone number.
+    But because the phone number can't reach 11 digits long. So it's time complexity is O(1).
+
+    I used the list.sort(), and it's time complexity is OO(n.log(n)).
+
+    So the overall time complexity is O(n.log(n)).
+
+*** Task 4
+    There's loop at line 35. Inside that loop, there 4 other loops that will run sequentially.
+    So the time complexity is O(n^2).
+
+    I used the list.sort(), and it's time complexity is O(n.log(n)).
+
+    So the overall time complexity is O(n^2).
