@@ -1,29 +1,14 @@
 import sys
+from typing import List
 
 
-    def get_value(self):
-        return self.value
-
-    def set_value(self, value):
-        self.value = value
-
-    def get_left_child(self):
-        return self.left
-
-    def get_right_child(self):
-        return self.right
-
-    def set_left_child(self, node):
-        self.left = node
-
-    def set_right_child(self, node):
-        self.right = node
-
-    def has_left_child(self):
-        return self.left is not None
-
-    def has_right_child(self):
-        return self.right is not None
+class Node:
+    def __init__(self, character: str = None, frequency: int = None):
+        self.character = character
+        self.frequency = frequency
+        self.left = None
+        self.right = None
+        self.bit: int = None
 
 
 class PriorityQueue:
@@ -32,73 +17,160 @@ class PriorityQueue:
         self.head: Node = None
 
 
-class HuffmanTree:
-    def __init__(self, value=None):
-        self.root = Node(value)
+class MinHeap:
+    def __init__(self, initial_size):
+        self.cbt: List[Node] = [None for _ in range (initial_size)]
+        self.next_index = 0
 
-    def get_root(self):
-        return self.root
+    def size(self):
+        return self.next_index
+
+    def pop(self):
+        """
+        Returns: the element at the top of the heap
+
+        """
+        if self.size() == 0:
+            return None
+        self.next_index -= 1
+
+        lowest_frequency_node = self.cbt[0]
+        last_element = self.cbt[self.next_index]
+
+        # place last element of the cbt at the root
+        self.cbt[0] = last_element
+
+        # we do not remove the elements,
+        # rather we allow next `insert` operation to overwrite it
+        self.cbt[self.next_index] = lowest_frequency_node
+        self._down_heapify()
+
+        return lowest_frequency_node
+
+    def insert(self, node: Node):
+        # insert element at the next index
+        self.cbt[self.next_index] = node
+
+        # heapify
+        self._up_heapify()
+
+        # increase index by 1
+        self.next_index += 1
+
+    def _up_heapify(self):
+        child_index = self.next_index
+
+        while child_index >= 1:
+            parent_index = (child_index - 1) // 2
+            parent_element = self.cbt[parent_index]
+            child_element = self.cbt[child_index]
+
+            if parent_element.frequency > child_element.frequency:
+                self.cbt[parent_index] = child_element
+                self.cbt[child_index] = parent_element
+
+                child_index = parent_index
+            else:
+                break
+
+    def _down_heapify(self):
+        parent_index = 0
+
+        while parent_index < self.next_index:
+            left_child_index = 2 * parent_index + 1
+            right_child_index = 2 * parent_index + 2
+
+            parent = self.cbt[parent_index]
+            left_child = None
+            right_child = None
+
+            min_element = parent
+
+            # check if left child exists
+            if left_child_index < self.next_index:
+                left_child = self.cbt[left_child_index]
+
+            # check if right child exists
+            if right_child_index < self.next_index:
+                right_child = self.cbt[right_child_index]
+
+            # compare with left child
+            if left_child is not None:
+                min_element = min(parent, left_child, key=lambda n: n.frequency)
+
+            # compare with right child
+            if right_child is not None:
+                min_element = min(min_element, right_child, key=lambda n: n.frequency)
+
+            # check if parent is rightly placed
+            if min_element == parent:
+                return
+
+            if min_element == left_child:
+                self.cbt[left_child_index] = parent
+                self.cbt[parent_index] = left_child
+                parent_index = left_child_index
+
+            elif min_element == right_child:
+                self.cbt[right_child_index] = parent
+                self.cbt[parent_index] = right_child
+                parent_index = right_child_index
+
+
+class HuffmanTree:
+    def __init__(self, node: Node = None):
+        self.root = node
 
     def set_root(self, node: Node):
         self.root = node
 
-    def add_node(self, node: Node, new_node: Node):
-        if new_node.frequency <= node.frequency:
-            if node.left is not None:
-                self.add_node(node.left, new_node)
-            else:
-                node.left = new_node
-        else:
-            if node.right is not None:
-                self.add_node(node.right, new_node)
-            else:
-                node.right = new_node
-
-    def merge_min_priority_node(self, node: Node, node1: Node, node2: Node):
-        if node1 is None:
-            if node.left is None:
-                node1 = node.left
-                self.merge_min_priority_node(node.right, node1, None)
-            else:
-                self.merge_min_priority_node(node.left, None, None)
-        elif node2 is None:
-            if node.left is None:
-                node2 = node.left
-                self.merge_min_priority_node(node.right, node1, node2)
-            else:
-                self.merge_min_priority_node(node.left, node1, None)
-        else:
-            new_node = Node()
-            new_node.frequency = node1.frequency + node2.frequency
-            self.add_node(new_node, no1)
-            self.add_node(self.root, new_node)
-
-
 
 def huffman_encoding(data):
 
+    if type(data) != str:
+        return None
+
     # 1. Determine the frequency/priority of each character/Node
-
-    characters = {}
+    characters_dict = {}
     for char in data:
-        if characters.get(char) is None:
-            characters[char] = Node(char)
+        if characters_dict.get(char) is None:
+            characters_dict[char] = Node(char, 1)
         else:
-            characters[char].frequency += 1
+            characters_dict[char].frequency += 1
 
-    # 2. Sort by frequency
-    tree = Tree()
-    for _, node in characters.items():
-        if tree.get_root().value is None:
-            tree.set_root(node)
-        else:
-            tree.add_node(node=tree.get_root(), new_node=node)
+    # 2. Add to min heap
+    min_heap = MinHeap(len(characters_dict))
+    for _, node in characters_dict.items():
+        min_heap.insert(node)
+    # print(f'min heap: \n'
+    #       f'{[node.character + " - " + str(node.frequency) if node.character else "None - " + str(node.frequency) for node in min_heap.cbt]}\n')
 
-    # 3. Pop-out two nodes with the minimum frequency and create a new node
-    # with a frequency equal to the sum of that two nodes
+    # Create Huffman Tree
+    huffman_tree = HuffmanTree()
 
-    tree.merge_min_priority_node(tree.root, None, None)
-    return tree
+    # remove every 2 lowest priority node
+    while min_heap.size() > 1:
+        min_node_1 = min_heap.pop()
+        min_node_2 = min_heap.pop()
+
+        # set new node and assign a bit for child node
+        new_root_node = Node(character=None,
+                             frequency=min_node_1.frequency + min_node_2.frequency)
+        new_root_node.left = min_node_1
+        new_root_node.left.bit = 0
+        new_root_node.right = min_node_2
+        new_root_node.right.bit = 1
+
+        huffman_tree.set_root(new_root_node)
+
+        # Add new node to the min heap
+        min_heap.insert(new_root_node)
+
+    huffman_tree.set_root(min_heap.pop())
+
+    # Generate encoded data
+    
+    return huffman_tree
 
 
 def huffman_decoding(data, tree):
@@ -113,8 +185,7 @@ if __name__ == "__main__":
     print("The size of the data is: {}\n".format(sys.getsizeof(a_great_sentence)))
     print("The content of the data is: {}\n".format(a_great_sentence))
 
-    # encoded_data, tree = huffman_encoding(a_great_sentence)
-    test = huffman_encoding(a_great_sentence)
+    encoded_data, tree = huffman_encoding(a_great_sentence)
 
     # print("The size of the encoded data is: {}\n".format(sys.getsizeof(int(encoded_data, base=2))))
     # print("The content of the encoded data is: {}\n".format(encoded_data))
