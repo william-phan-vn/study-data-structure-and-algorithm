@@ -120,9 +120,26 @@ class MinHeap:
 class HuffmanTree:
     def __init__(self, node: Node = None):
         self.root = node
+        self.codes: dict = {}
+
+    def get_root(self):
+        return self.root
 
     def set_root(self, node: Node):
         self.root = node
+
+    def generate_binary_code(self, node: Node, code: str = '') -> None:
+        if node.left is None and node.right is None:
+            self.codes[node.character] = code
+            return
+
+        if node.left is not None:
+            code += '0'
+            self.generate_binary_code(node.left, code)
+
+        if node.right is not None:
+            code += '1'
+            self.generate_binary_code(node.right, code)
 
 
 def huffman_encoding(data):
@@ -168,9 +185,15 @@ def huffman_encoding(data):
 
     huffman_tree.set_root(min_heap.pop())
 
-    # Generate encoded data
-    
-    return huffman_tree
+    # 7. Generate encoded data
+    huffman_tree.generate_binary_code(huffman_tree.get_root())
+
+    encoded_data = ''
+    for char in data:
+        print(f'char: {char} - {huffman_tree.codes.get(char)}')
+        encoded_data += huffman_tree.codes.get(char)
+
+    return encoded_data, huffman_tree
 
 
 def huffman_decoding(data, tree):
