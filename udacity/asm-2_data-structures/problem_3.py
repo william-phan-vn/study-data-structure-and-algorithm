@@ -18,6 +18,7 @@ class Node:
         else:
             return None
 
+
 class PriorityQueue:
     def __init__(self, value):
         self.value = value
@@ -194,9 +195,9 @@ def huffman_encoding(data):
 
         # Add new node to the min heap
         min_heap.insert(new_root_node)
+    huffman_tree.set_root(min_heap.pop())
 
     # 7. Generate encoded data
-    huffman_tree.set_root(min_heap.pop())
     huffman_tree.generate_binary_code(huffman_tree.get_root())
 
     encoded_data = ''

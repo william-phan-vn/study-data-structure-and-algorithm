@@ -34,13 +34,16 @@ if __name__ == '__main__':
     # and two of them must include edge cases, such as null, empty or very large values
 
     # Test Case 1
+    print(f'---------- Test 1 ----------- \n')
     print(find_files('.h', 'testdir'))
     # Expected result: ['testdir/subdir3/subsubdir1', 'testdir/subdir5', 'testdir', 'testdir/subdir1']
 
     # Test Case 2
-    # print(find_files('.f', 'testdir'))
+    print(f'---------- Test 2 ----------- \n')
+    print(find_files('.f', 'testdir'))
     # Expected result: []
 
     # Test Case 3
-    # print(find_files('.f', 'unknown/directory'))
+    print(f'---------- Test 3 ----------- \n')
+    print(find_files('.f', 'unknown/directory'))
     # Expected result: FileNotFoundError: [Errno 2] No such file or directory: 'unknown/directory'
