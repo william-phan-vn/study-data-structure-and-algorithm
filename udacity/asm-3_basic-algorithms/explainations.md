@@ -3,4 +3,9 @@ The required time complexity is O(log(n))
 
 **Solution:** Except the special case (0, 1), compare the half value until found the value whose square is less than or equal to the given number.
 
-## Problem 2. 
+## Problem 2. Search in a Rotated Sorted Array
+The required time complexity is O(log(n))
+
+**Solution** 
+- Find the pivot point by recursively split array in to 2 half
+- Use binary search to search the array from the pivot point
