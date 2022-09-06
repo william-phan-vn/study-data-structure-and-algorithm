@@ -22,4 +22,8 @@ This will make sure that we always have the biggest value for larger digit level
 
 So the overall time complexity is O(nlog(n))
 
-## Problem 4. 
+## Problem 4. Dutch National Flag Problem
+Sort the array in a single traversal
+--> Count the number of 0, 1, 2. Then transform to the sorted array result
+
+## Problem 5. 
