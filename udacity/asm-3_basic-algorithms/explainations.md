@@ -26,4 +26,11 @@ So the overall time complexity is O(nlog(n))
 Sort the array in a single traversal
 --> Count the number of 0, 1, 2. Then transform to the sorted array result
 
-## Problem 5. 
+## Problem 5. Autocomplete with Tries
+
+As the title, we use Trie data structure to resolve the problem.
+- For insertion() and finding() operation, we loop through the word/prefix characters, so it takes O(n) time.
+- For suffixes() operation, we traverse from the prefix_node collecting all the suffixes, it takes O(n) time.
+The overall time complexity is O(n).
+
+## Problem 6.
