@@ -33,4 +33,9 @@ As the title, we use Trie data structure to resolve the problem.
 - For suffixes() operation, we traverse from the prefix_node collecting all the suffixes, it takes O(n) time.
 The overall time complexity is O(n).
 
-## Problem 6.
+## Problem 6. Max and Min in a Unsorted Array
+The expected time complexity is O(n).
+Solution: Traverse the unordered array and find the max and min values.
+
+## Problem 7. HTTPRouter using a Trie
+We use a Trie like problem 5, it's time complexity is O(n).
