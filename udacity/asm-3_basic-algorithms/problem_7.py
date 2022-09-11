@@ -40,6 +40,10 @@ class Router:
     # return the "not found" handler if you added one
     # bonus points if a path works with and without a trailing slash
     # e.g. /about and /about/ both return the /about handler
+        if type(path) is not str:
+            print('Error: path must be a string.')
+            return None
+
         parts = self._split_path(path)
         current_node = self.root_node
 
@@ -58,12 +62,20 @@ class Router:
 if __name__ == '__main__':
     # create the router and add a route
     router = Router(root_handler, not_found_handler)
-    print("Pass" if router.lookup("/") == root_handler else "Fail")
 
     router.add_handler("/home/about", "about handler")  # add a route
 
     # some lookups with the expected output
+
+    print('\n---------- Test 1 -----------')
+    print("Pass" if router.lookup(None) is None else "Fail")
+    print("Pass" if router.lookup('') == root_handler else "Fail")
+    print("Pass" if router.lookup("/") == root_handler else "Fail")
+
+    print('\n---------- Test 2 -----------')
     print("Pass" if router.lookup("/home") == not_found_handler else "Fail")
-    print("Pass" if router.lookup("/home/about") == about_handler else "Fail")
-    print("Pass" if router.lookup("/home/about") == about_handler else "Fail")
     print("Pass" if router.lookup("/home/about/me") == not_found_handler else "Fail")
+
+    print('\n---------- Test 3 -----------')
+    print("Pass" if router.lookup("/home/about") == about_handler else "Fail")
+    print("Pass" if router.lookup("/home/about") == about_handler else "Fail")

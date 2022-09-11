@@ -68,6 +68,12 @@ def find_pivot_point(input_list, index_test):
 
 def test_function(test_case):
     input_list = test_case[0]
+    if type(input_list) is not list:
+        print('Error! Please input a list of integers.')
+        return
+    if len(input_list) == 0:
+        print('The list must contain at least one element.')
+        return
     number = test_case[1]
 
     if linear_search(input_list, number) == rotated_array_search(input_list, number):
@@ -77,7 +83,8 @@ def test_function(test_case):
 
 
 if __name__ == '__main__':
-
+    test_function([[], 0])
+    test_function([None, 0])
     test_function([[2, 1], 0])
     test_function([[6, 7, 8, 9, 10, 1, 2, 3, 4], 6])
     test_function([[6, 7, 8, 9, 10, 1, 2, 3, 4], 1])

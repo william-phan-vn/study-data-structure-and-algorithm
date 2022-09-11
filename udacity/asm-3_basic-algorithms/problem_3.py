@@ -7,6 +7,10 @@ def rearrange_digits(input_list):
     Returns:
        (int),(int): Two maximum sums
     """
+    if type(input_list) != list:
+        print('Error! Please input a list of digits!')
+        return
+
     # Sort elements
     input_list = merge_sort(input_list)
     if len(input_list) % 2 == 0:
@@ -69,15 +73,21 @@ def merge(left, right):
 
 def test_function(test_case):
     output = rearrange_digits(test_case[0])
+    if output is None:
+        print('Fail\n')
+        return
+
     solution = test_case[1]
     if sum(output) == sum(solution):
-        print("Pass")
+        print("Pass\n")
     else:
-        print("Fail")
+        print("Fail\n")
 
 
 if __name__ == '__main__':
 
+    test_function([None, [0]])
+    test_function([[2], [2]])
     test_function([[4, 5, 3, 1, 2], [542, 31]])
     test_function([[5, 2, 1, 4], [52, 41]])
     test_function([[8, 1, 9, 4, 3, 2], [942, 831]])

@@ -48,15 +48,20 @@ class Trie:
         current_node.is_word = True
 
     def find(self, prefix) -> TrieNode:
+        if type(prefix) != str:
+            print('Error: a prefix must be a string.')
+            return
+
         ## Find the Trie node that represents this prefix
         current_node = self.root
 
         for char in prefix:
             if char not in current_node.children:
-                return None
+                print(prefix + " not found")
+                return
             current_node = current_node.children[char]
 
-        return current_node
+        print('\n'.join(current_node.suffixes()))
 
 
 if __name__ == '__main__':
@@ -69,10 +74,22 @@ if __name__ == '__main__':
     for word in wordList:
         my_trie.insert(word)
 
+    print('\n---------- Test 1 -----------')
+    prefix = ""
+    print('prefix: ', prefix)
+    my_trie.find(prefix)
+
+    print('\n---------- Test 2 -----------')
+    prefix = None
+    print('prefix: ', prefix)
+    my_trie.find(prefix)
+
+    print('\n---------- Test 3 -----------')
     prefix = "d"
-    prefix_node = my_trie.find(prefix)
-    if prefix_node:
-        # print(my_trie.collect_suffixes(prefix_node))
-        print('\n'.join(prefix_node.suffixes()))
-    else:
-        print(prefix + " not found")
+    print('prefix: ', prefix)
+    my_trie.find(prefix)
+
+    print('\n---------- Test 4 -----------')
+    prefix = "tri"
+    print('prefix: ', prefix)
+    my_trie.find(prefix)
