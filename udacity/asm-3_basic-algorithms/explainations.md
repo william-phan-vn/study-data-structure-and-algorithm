@@ -8,8 +8,9 @@ We don't have list variable so the space complexity is O(1).
 The expected time complexity is O(log(n))
 
 **Solution**
-- Find the pivot point by recursively split array in to 2 half. It takes O(n) space.
-- Use binary search to search the array from the pivot point. It takes O(n) space.
+- Find the pivot point by recursively split array in to 2 half. It takes O(log(n)) time space.
+- Use recursively binary search to search the array from the pivot point. It takes O(log(n)) space.
+So the overall space complexity is O(log(n)).
 
 
 ## Problem 3. Rearrange Array Elements
@@ -30,7 +31,6 @@ Sort the array in a single traversal
 The time complexity is O(n) and space complexity is O(n)
 
 ## Problem 5. Autocomplete with Tries
-
 As the title, we use Trie data structure to resolve the problem.
 - For insertion() and finding() operation, we loop through the word/prefix characters, so it takes O(n) time and O(n) space.
 - For suffixes() operation, we traverse from the prefix_node collecting all the suffixes, it takes O(n) time and O(nlog(n)) space.
@@ -39,7 +39,7 @@ The overall time complexity is O(n) and space complexity is O(nlog(n)).
 ## Problem 6. Max and Min in a Unsorted Array
 The expected time complexity is O(n).
 Solution: Traverse the unordered array and find the max and min values.
-The space complexity is O(n)
+We used the constant space in the for loop, so the space complexity is O(1).
 
 ## Problem 7. HTTPRouter using a Trie
 We use a Trie like problem 5. But we just find a specific item instead of list down all. 
