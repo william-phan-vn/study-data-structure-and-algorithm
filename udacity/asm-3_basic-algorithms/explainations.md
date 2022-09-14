@@ -32,9 +32,21 @@ The time complexity is O(n) and space complexity is O(n)
 
 ## Problem 5. Autocomplete with Tries
 As the title, we use Trie data structure to resolve the problem.
+It has 3 functions:
+- insert(): loop through the word characters to add new children node. It takes O(n) time and O(n) space.
+- find(): loop through the prefix characters to check if the prefix is valid. It takes O(n) time and O(1) space.
+- suffixes() to get all suffixes:
+  - From the current node (found by the find() function), it loops through the node children. It takes O(1) space.
+  - Then recursively find all the child suffixes. It takes O(n) space.
+  - Because `number of suffixes <= number of node child`. In worst case, number of suffixes = N. So the time complexity of this operation is O(n).
+  
+So the overall time complexity is O(n) and space complexity is O(n).
+
+### Time complexity
 - For insertion() and finding() operation, we loop through the word/prefix characters, so it takes O(n) time and O(n) space.
 - For suffixes() operation, we traverse from the prefix_node collecting all the suffixes, it takes O(n) time and O(nlog(n)) space.
-The overall time complexity is O(n) and space complexity is O(nlog(n)).
+### Space complexity
+- The overall time complexity is O(n) and space complexity is O(nlog(n)).
 
 ## Problem 6. Max and Min in a Unsorted Array
 The expected time complexity is O(n).
@@ -42,5 +54,10 @@ Solution: Traverse the unordered array and find the max and min values.
 We used the constant space in the for loop, so the space complexity is O(1).
 
 ## Problem 7. HTTPRouter using a Trie
-We use a Trie like problem 5. But we just find a specific item instead of list down all. 
-So it's time complexity is O(n), and space complexity is O(n)
+We use a Trie structure to resolve this problem.
+It has 2 main functions:
+- split_path(): loop through the path characters to get parts. It takes O(n) time and O(n) space.
+- add_handler(): loop through the parts to add children node and handler. It takes O(n) time and O(n) space.
+- lookup(): loop through the part to check if the path is valid, then return the handler. It takes O(n) time and O(1) space.
+
+So the overall time complexity is O(n), and space complexity is O(n).

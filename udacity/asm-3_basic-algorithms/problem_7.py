@@ -25,7 +25,7 @@ class Router:
     # You will need to split the path and pass the pass parts
     # as a list to the RouteTrie
         current_node = self.root_node
-        parts = self._split_path(path)
+        parts = self.split_path(path)
         for part in parts:
             if part not in current_node.children:
                 current_node.children[part] = RouteTrieNode()
@@ -44,7 +44,7 @@ class Router:
             print('Error: path must be a string.')
             return None
 
-        parts = self._split_path(path)
+        parts = self.split_path(path)
         current_node = self.root_node
 
         for part in parts:
@@ -54,9 +54,18 @@ class Router:
 
         return current_node.handler
 
-
-    def _split_path(self, path) -> List[str]:
-        return list(filter(None, path.split('/')))
+    def split_path(self, path) -> List[str]:
+        if path == '/':
+            return []
+        parts = []
+        current_part = ''
+        for character in path:
+            if character == '/':
+                parts.append(current_part)
+                current_part = ''
+            else:
+                current_part += character
+        return parts
 
 
 if __name__ == '__main__':
