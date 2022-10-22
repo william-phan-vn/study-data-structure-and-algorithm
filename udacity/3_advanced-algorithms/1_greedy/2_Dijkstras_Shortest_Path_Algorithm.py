@@ -1,3 +1,7 @@
+'''This implementation of the Dijkstra's algorithm is not very efficient.
+Currently it has a O(n^2) time complexity.
+We will see a better version in the next lesson - "Graph Algorithms" with O(nlogn) time complexity.
+'''
 #!/usr/bin/env python
 # coding: utf-8
 
