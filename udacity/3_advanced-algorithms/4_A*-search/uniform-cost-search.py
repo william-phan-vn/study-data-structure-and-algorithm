@@ -1,6 +1,8 @@
-''' Uniform Cost Search - Cheapest First Search '''
+''' Uniform Cost Search - Cheapest First Search
+Pick the path with the lowest total cost'''
 
 import math
+from typing import List, Dict
 
 
 class GraphEdge(object):
@@ -13,6 +15,7 @@ class GraphNode(object):
     def __init__(self, val):
         self.value = val
         self.edges = []
+        self.is_frontier = False
         self.explored = False
 
     def add_child(self, node, distance):
@@ -37,6 +40,20 @@ class Graph(object):
     #         node2.remove_child(node1)
 
 
+class TrackingRoutes(object):
+    def __init__(self, start: int):
+        self.routes_dict: Dict[int: List[int]] = {start: [start]}
+
+    def add_next_paths(self, last_node, next_nodes: List):
+        temp_route = self.routes_dict[last_node]
+        self.routes_dict.pop(last_node)
+        for node in next_nodes:
+            self.routes_dict[node] = temp_route + [node]
+
+    def remove_route_by_last_node(self, last_node):
+        self.routes_dict.pop(last_node)
+
+
 class Map:
     def __init__(self, intersections, roads):
         self.intersections = intersections
@@ -44,7 +61,7 @@ class Map:
 
 
 # def uniform_cost_search(graph: Graph, start_node, end_node, distance_dict={}, shortest_distance=0, shortest_path={}):
-def uniform_cost_search(graph: Graph, start_node, end_node, shortest_path, path_cost_dict={}):
+def uniform_cost_search(graph: Graph, start_node, end_node, tracking_route: TrackingRoutes, fontier_nodes_dict={}, lowest_total_cost=0):
     '''
 
     Args:
@@ -53,7 +70,7 @@ def uniform_cost_search(graph: Graph, start_node, end_node, shortest_path, path_
         end_node:
         distance_dict: a dictionary that stores the distance to edge nodes wrt the start_node in the form of node:distance as key:value
         shortest_distance: the shortest distance road between start_node and end_node
-        shortest_path: the shortest path from start node to end node
+        tracking_paths: the shortest path from start node to end node
 
     Returns:
         shortest_distance, shortest_path
@@ -62,63 +79,45 @@ def uniform_cost_search(graph: Graph, start_node, end_node, shortest_path, path_
     '''Starting exploring the space'''
 
     # Set the start_node in the graph as explored
-    graph.nodes[start_node.value].explored = True
-
-    # Remove the last edge from the shortest path if there's no edge
-    if len(start_node.edges) <= 1:
-        shortest_path.pop(start_node.value)
+    graph.nodes[start_node.value].is_frontier = True
 
     # Go through the Frontier path and Define the path_cost_list
+    next_node_values = []
     for edge in start_node.edges:
-        if not graph.nodes[edge.node.value].explored:
-            path_cost_dict[edge.node] = edge.distance
+        node_value = edge.node.value
+
+        if not graph.nodes[node_value].is_frontier and not graph.nodes[node_value].explored:
+            total_distance = edge.distance + lowest_total_cost
+            fontier_nodes_dict[edge.node] = total_distance
+            graph.nodes[node_value].is_frontier = True
+
+            # Update the storing of current paths
+            next_node_values.append(node_value)
+
+    # If there is no edge added --> remove from the current path
+    if len(next_node_values) > 0:
+        tracking_route.add_next_paths(start_node.value, next_node_values)
+    else:
+        tracking_route.remove_route_by_last_node(start_node.value)
+
 
     # If the path_cost_dict is empty: There's no road between 2 city
-    if len(path_cost_dict) == 0:
+    if len(fontier_nodes_dict) == 0:
         return None
 
     # Short the path cost to find the min cost
-    current_node, node_distance = sorted(path_cost_dict.items(), key=lambda x: x[1])[0]
-
-    # Add the current node to the shortest_path
-    shortest_path[current_node.value] = node_distance
+    current_node, node_distance = sorted(fontier_nodes_dict.items(), key=lambda x: x[1])[0]
 
     # Check if the current_node is the end_node
     if current_node.value == end_node.value:
-        return shortest_path
-    # Remove the cheapest path cost from the dict, because it will be explored in the next step
-    path_cost_dict.pop(current_node)
+        return tracking_route.routes_dict[current_node.value]
+
+    # Update the frontier and the explored node
+    graph.nodes[current_node.value].explored = True
+    fontier_nodes_dict.pop(current_node)
 
     # Go through the cheapest cost path, repeat the uniform cost search
-    return uniform_cost_search(graph, current_node, end_node, shortest_path, path_cost_dict)
-
-    # for edge in start_node.edges:
-    #     if graph.nodes[edge.node.value].seen:
-    #         continue
-    #     if distance_dict.get(edge.node) is None:
-    #         distance_dict[edge.node] = shortest_distance + edge.distance
-    #     else:
-    #         shortest_path.pop(start_node.value)
-    #
-    # # Sort the distance_dict
-    # distance_list = sorted(distance_dict.items(), key=lambda x: x[1])
-    #
-    # for index, item in enumerate(distance_list):
-    #     current_node = item[0]
-    #     distance = item[1]
-    #
-    #     shortest_distance = distance
-    #     shortest_path[current_node.value] = shortest_distance
-    #
-    #     if current_node.value == end_node.value:
-    #         return shortest_distance, shortest_path
-    #
-    #     distance_dict.pop(current_node)
-    #     if len(current_node.edges) > 1:
-    #         return uniform_cost_search(graph, current_node, end_node, distance_dict, shortest_distance, shortest_path)
-    #     else:
-    #         shortest_path.pop(current_node.value)
-    #         graph.nodes[current_node.value].seen = True
+    return uniform_cost_search(graph, current_node, end_node, tracking_route, fontier_nodes_dict, node_distance)
 
 
 def dijkstra(graph, start_node, end_node):
@@ -182,7 +181,7 @@ def shortest_path(M, start, goal):
         shortest_path_dict = {goal: 0}
     else:
         shortest_path_dict = uniform_cost_search(graph, node_list[start], node_list[goal],
-                                                 shortest_path={start: 0})
+                                                 tracking_route=TrackingRoutes(start))
 
     if shortest_path_dict is None:
         print(f'There is no road between {start} and {goal}')
