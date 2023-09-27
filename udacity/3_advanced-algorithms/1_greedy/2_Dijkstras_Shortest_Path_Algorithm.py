@@ -92,7 +92,7 @@ def dijkstra(graph, source):
         # 6.5. Remove the current node from the unvisited set.
         unvisited.remove(min_node)
 
-    return result
+    return result, path
 
 import sys
 
