@@ -32,7 +32,6 @@ class Graph(object):
 
 Now let's create the graph.
 
-
 ```python
 nodeG = GraphNode('G')
 nodeR = GraphNode('R')
@@ -41,14 +40,14 @@ nodeP = GraphNode('P')
 nodeH = GraphNode('H')
 nodeS = GraphNode('S')
 
-graph1 = Graph([nodeS,nodeH,nodeG,nodeP,nodeR,nodeA] ) 
-graph1.add_edge(nodeG,nodeR)
-graph1.add_edge(nodeA,nodeR)
-graph1.add_edge(nodeA,nodeG)
-graph1.add_edge(nodeR,nodeP)
-graph1.add_edge(nodeH,nodeG)
-graph1.add_edge(nodeH,nodeP)
-graph1.add_edge(nodeS,nodeR)
+graph1 = Graph([nodeS, nodeH, nodeG, nodeP, nodeR, nodeA])
+graph1.add_road(nodeG, nodeR)
+graph1.add_road(nodeA, nodeR)
+graph1.add_road(nodeA, nodeG)
+graph1.add_road(nodeR, nodeP)
+graph1.add_road(nodeH, nodeG)
+graph1.add_road(nodeH, nodeP)
+graph1.add_road(nodeS, nodeR)
 ```
 
 ## Implement DFS

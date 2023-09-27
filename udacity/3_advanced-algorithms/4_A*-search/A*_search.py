@@ -10,6 +10,44 @@ class Coordinate(object):
         self.y = y
 
 
+'''
+In this project, two nearby states are connected by a straight line,
+so I use Euclidean distance to calculate the distance between 2 nearby states (line 186).
+
+For the heuristic function, Manhattan distance is another choice, but it can be overestimated the distance.
+Manhattan distance is suitable if we allow the movement on a grid with 4 directions.
+If we allow the movement on a grid with 8 directions, Diagonal distance is another choice.
+And because we just allow the movement on the defined graph 
+(defined direction, not movement in a grid with 4 directions or 8 directions),
+euclidean is the suitable choice (line 117).
+
+Ex. for start = 8, goal = 24. 
+The result using euclidean distance is [8, 14, 16, 37, 12, 17, 10, 24],
+while the result using Manhattan distance is [8, 14, 16, 37, 12, 31, 27, 24] 
+which is a little bit farther compared to the result using euclidean distance.
+If using diagonal distance in this case, the result is as same as using euclidean distance
+which is the optimal distance as I can see in the graph
+'''
+def get_distance(p1: Coordinate, p2: Coordinate, function_type: str):
+    if function_type == 'euclidean':
+        return math.sqrt(pow(p2.x - p1.x, 2) + pow(p2.y - p1.y, 2))
+    elif function_type == 'manhattan':
+        return abs(p1.x - p2.x) + abs(p1.y - p2.y)
+    elif function_type == 'diagonal':
+        '''
+        The cost of diagonal distance doesn’t need to be exact
+        and is usually worth it to use a constant multiplier
+        rather than the square root as the square root operation is quite expensive
+        '''
+        non_diagonal_cost = 1
+        diagonal_cost = 1.414
+        d_max = max(abs(p1.x - p2.x), abs(p1.y - p2.y))
+        d_min = min(abs(p1.x - p2.x), abs(p1.y - p2.y))
+        return diagonal_cost * d_min + non_diagonal_cost * (d_max - d_min)
+    else:
+        return None
+
+
 class GraphEdge(object):
     def __init__(self, destinationNode, distance):
         self.node = destinationNode
@@ -57,10 +95,6 @@ class Map:
         self.roads = roads
 
 
-def get_distance(p1: Coordinate, p2: Coordinate) -> float:
-    return math.sqrt(pow(p2.x - p1.x, 2) + pow(p2.y - p1.y, 2))
-
-
 def a_star_search(start_node, end_node):
     # Define the frontier_nodes and explored_nodes
     frontier_nodes = ([start_node])
@@ -80,8 +114,8 @@ def a_star_search(start_node, end_node):
                 current_node = node
 
             current_estimated_distance = distance_dict[current_node] \
-                                         + get_distance(current_node.coordinate, end_node.coordinate)
-            if distance_dict[node] + get_distance(node.coordinate, end_node.coordinate) \
+                                         + get_distance(current_node.coordinate, end_node.coordinate, 'euclidean')
+            if distance_dict[node] + get_distance(node.coordinate, end_node.coordinate, 'euclidean') \
                     < current_estimated_distance:
                 current_node = node
 
@@ -145,14 +179,11 @@ def shortest_path(M, start, goal):
         # print(edge1, nearby_edges)
         coordinates_1 = Coordinate(M.intersections[edge1][0],
                                    M.intersections[edge1][1])
-        # print(edge1_x, edge1_y)
         for edge2 in nearby_edges:
             # calculate the distance
             coordinates_2 = Coordinate(M.intersections[edge2][0],
                                      M.intersections[edge2][1])
-            # print(edge2_x, edge2_y)
-            distance = get_distance(coordinates_1, coordinates_2)
-            # print(distance)
+            distance = get_distance(coordinates_1, coordinates_2, 'euclidean')
             graph.add_road(node_list[edge1], node_list[edge2], distance)
 
     if start == goal:

@@ -34,11 +34,6 @@ class Graph(object):
         if node1 in self.nodes and node2 in self.nodes:
             node1.add_child(node2, distance)
 
-    # def remove_edge(self, node1, node2):
-    #     if node1 in self.nodes and node2 in self.nodes:
-    #         node1.remove_child(node2)
-    #         node2.remove_child(node1)
-
 
 class TrackingRoutes(object):
     def __init__(self, start: int):
@@ -60,7 +55,6 @@ class Map:
         self.roads = roads
 
 
-# def uniform_cost_search(graph: Graph, start_node, end_node, distance_dict={}, shortest_distance=0, shortest_path={}):
 def uniform_cost_search(graph: Graph, start_node, end_node, tracking_route: TrackingRoutes, fontier_nodes_dict={}, lowest_total_cost=0):
     '''
 
@@ -120,38 +114,6 @@ def uniform_cost_search(graph: Graph, start_node, end_node, tracking_route: Trac
     return uniform_cost_search(graph, current_node, end_node, tracking_route, fontier_nodes_dict, node_distance)
 
 
-def dijkstra(graph, start_node, end_node):
-    # Create a dictionary that stores the distance to all nodes in the form of node:distance as key:value
-    # Assume the initial distance to all nodes is infinity.
-    # Use math.inf as a predefined constant equal to positive infinity
-    distance_dict = {node: math.inf for node in graph.nodes}
-
-    shortest_distance = {}
-
-    distance_dict[start_node] = 0
-
-    # 5. Create a `path` dictionary that keeps track of the previous node (value) that can lead to the current node (key).
-    path = []
-
-    while distance_dict:
-
-        current_node, node_distance = sorted(distance_dict.items(), key=lambda x: x[1])[0]
-        print(current_node.value, node_distance)
-
-        path.append(current_node.value)
-        shortest_distance[current_node] = distance_dict.pop(current_node)
-
-        if current_node.value == end_node.value:
-            return shortest_distance[current_node], path
-
-        for edge in current_node.edges:
-            if edge.node in distance_dict:
-
-                distance_to_neighbour = node_distance + edge.distance
-                if distance_dict[edge.node] > distance_to_neighbour:
-                    distance_dict[edge.node] = distance_to_neighbour
-
-
 def shortest_path(M, start, goal):
     print("shortest path called here")
     node_list = []
@@ -178,17 +140,17 @@ def shortest_path(M, start, goal):
             graph.add_road(node_list[edge1], node_list[edge2], distance)
 
     if start == goal:
-        shortest_path_dict = {goal: 0}
+        shortest_route = {goal: 0}
     else:
-        shortest_path_dict = uniform_cost_search(graph, node_list[start], node_list[goal],
+        shortest_route = uniform_cost_search(graph, node_list[start], node_list[goal],
                                                  tracking_route=TrackingRoutes(start))
 
-    if shortest_path_dict is None:
+    if shortest_route is None:
         print(f'There is no road between {start} and {goal}')
     else:
-        print(f'The shortest path from {start} to {goal} is {shortest_path_dict}')
+        print(f'The shortest path from {start} to {goal} is {shortest_route}')
 
-    return
+    return shortest_route
 
 
 
