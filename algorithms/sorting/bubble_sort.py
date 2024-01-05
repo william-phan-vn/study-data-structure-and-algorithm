@@ -1,6 +1,3 @@
-# Bubble sort is a simple sorting algorithm that repeatedly steps through the list, 
-# compares adjacent elements, and swaps them if they are in the wrong order. 
-# The pass through the list is repeated until no swaps are needed, which indicates that the list is sorted. 
 # Here's how you can implement bubble sort in Python:
 
 def bubble_sort(arr):
@@ -34,5 +31,4 @@ print("Sorted array:", arr)
 # The inner loop's range is adjusted by n - i - 1 because after each pass, the largest (or smallest, depending on sorting order) element bubbles up to the end of the array, so we don't need to check it again.
 # The code continues to perform passes until no swaps are needed, ensuring the list is fully sorted when the algorithm terminates.
 # This is a basic example of bubble sort. 
-# While it's not the most efficient sorting algorithm for large lists, it's useful for educational purposes and for small lists where simplicity is more important than speed.
 
