@@ -12,7 +12,10 @@ While it's not the most efficient sorting algorithm for large lists, it's useful
 ## Merge sort
 Merge Sort is a divide-and-conquer sorting algorithm that divides the input array into two halves, recursively sorts each half, and then merges the sorted halves back together. 
 
+Space Complexity: O(n)
+Time Complexity: O(nlog(n)): It's the most efficient to sort multiple types of data.
 
+## Quick sort
 
 
 ## Selection sort
